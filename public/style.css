@@ -79,3 +79,11 @@ h2 {
 .footer-h4 {
   text-align: center; 
 }
+
+@media only screen and (orientation: landscape) {
+
+  #input-form {
+    font-size: 1rem;
+  }
+  
+}
