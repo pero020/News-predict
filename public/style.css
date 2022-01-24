@@ -1,0 +1,81 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap');
+
+body {
+  font-family: 'Noto Serif', serif;
+  margin: 0;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+.header-div {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  border-bottom: 2px solid brown;
+}
+
+.header-h1 {
+  margin-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+.input-div {
+  display: flex;
+  justify-content: center;
+  width: 75%;
+  margin: 0 auto;
+  padding-top: 100px;
+}
+
+#input-form {
+  width: 50%;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.search-input {
+  width: 10rem;
+}
+
+.buy-sell-div {
+  display: flex;
+  width: 75%;
+  margin: 0 auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  align-items: center;
+  justify-content: space-around;
+
+}
+
+.buy-h2 {
+  opacity: 25%;
+}
+
+.sell-h2 {
+  opacity: 25%;
+}
+
+.article {
+  border-bottom: 2px solid brown;
+  margin: 0 25px;
+}
+
+.footer-div {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.footer-h4 {
+  text-align: center; 
+}

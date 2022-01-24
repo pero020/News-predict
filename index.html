@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Predictor</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  
+  <div class="header-div">
+
+    <h1 class="header-h1">The NewPredict</h1>
+
+  </div>
+
+  <div class="input-div">
+
+    <form id="input-form" action="/index.html">
+      Search term: <br> <input class="search-input" type="text" name="searchText"> <br>
+      <input type="button" value="Submit" onclick="myFunction()">
+    </form>
+    
+  </div>
+
+  <div class="buy-sell-div">
+
+    <div class="buy-div">
+      <h2 class="buy-h2">Buy</h2>
+    </div>
+
+    <div class="sell-div">
+      <h2 class="sell-h2">Sell</h2>
+    </div>
+
+  </div>
+
+  <div class="all-news-div">
+
+    <!-- <div class="article">
+      <h3 class="article-title"></h3>
+      <h4 class="article-content"></h4>
+      <h5 class="article-date"></h5>
+    </div> -->
+
+  </div>
+
+  <!-- <div class="footer-div">
+
+    <h4 class="footer-h4">Good luck!</h4>
+
+  </div> -->
+
+  <script>
+
+    function resetPage() {
+
+      button = document.getElementsByClassName("sell-h2")[0];
+      button.style.color = "black";
+      button.style.opacity = "25%";
+      button = document.getElementsByClassName("buy-h2")[0];
+      button.style.color = "black";
+      button.style.opacity = "25%";
+
+      let articles = document.querySelectorAll(".article")
+      articles.forEach(article => {
+        article.parentNode.removeChild(article);
+      });
+      
+      
+    }
+
+    async function myFunction() {
+      
+      const form = document.getElementById("input-form");
+      const searchText = form.elements["searchText"].value;
+
+      const positiveWords = ["good", "happy", "exciting", "great", "welcome", "better", "excellent", "awesome", "amazing", "fantstic", "buy", "gain", "gained", "interesting", "earnings", "double", "doubled", "high", "interest", "earning", "earnings", "thrive", "invest", "ready", "positive", "massive", "new", "green"];
+      const negativeWords = ["bad", "sad", "hardly", "scarcely", "worse", "loss", "lost", "sell", "fell", "barely", "down", "sue", "sues", "crash", "crashes", "falls", "fear", "fears", "low", "tumbling", "dangerous", "risk", "crash", "crashing", "problem", "pressure", "red"];
+
+      let response = {}
+
+      await fetch("/getApi/" + searchText, {method: "POST"})
+      .then(response => response.json())
+      .then(data => {
+        console.log("Success:");
+        console.log(data);
+
+        resetPage();
+
+        let div = document.getElementsByClassName("all-news-div")[0];
+        let titles, contents, dates;
+
+        for (let i = 0; i < data.results.length; i++) {
+
+          div.innerHTML += "<div class='article'><h3 class='article-title'></h3><h4 class='article-content'></h4><h5 class='article-date'></h5></div>"
+          titles = document.querySelectorAll(".article-title")[i];
+          contents = document.querySelectorAll(".article-content")[i];
+          dates = document.querySelectorAll(".article-date")[i];
+
+          titles.innerHTML = data.results[i].title;
+          if (data.results.content != null) {
+            contents.innerHTML = data.results[i].content;
+          } else if (data.results[i].description != null) {
+            contents.innerHTML = data.results[i].description;
+          } else {
+            console.log("No desc or content!");
+          }
+          
+          dates.innerHTML = data.results[i].pubDate;
+        }
+
+        let average = 0;
+        data.results.forEach(article => {
+
+          let wordsDescription, wordsTitle, words;
+          wordsTitle = article.title.split(" ");
+          if (article.content != null) {
+            wordsDescription = article.content.split(" ");
+          } else if (article.description != null) {
+            wordsDescription = article.description.split(" ");
+          } else {
+            wordsDescription = [];
+          }
+          words = wordsTitle.concat(wordsDescription);
+
+          words.forEach(word => {
+            if (positiveWords.includes(word.toLowerCase())) {
+              average += 1;
+              console.log(average);
+            }
+            if (negativeWords.includes(word.toLowerCase())) {
+              average -= 1;
+              console.log(average);
+            }
+          });
+          
+        });
+        console.log(average);
+        let button
+        if (average < 0) {
+          button = document.getElementsByClassName("sell-h2")[0];
+          button.style.color = "red";
+          button.style.opacity = "100%";
+        } else if (average > 0) {
+          button = document.getElementsByClassName("buy-h2")[0];
+          button.style.color = "green";
+          button.style.opacity = "100%";
+        }
+
+      })
+      .catch(err => {
+      console.log(err);
+      });
+
+      
+
+    }
+
+    
+  </script>
+
+</body>
+</html>
