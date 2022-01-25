@@ -19,8 +19,8 @@
 
   <div class="input-div">
 
-    <form id="input-form" action="">
-      Search term: <br> <input class="search-input" type="text" name="searchText"> <br>
+    <form id="input-form" action="javascript:myFunction()">
+      Search term: <br> <input class="search-input" value="Tesla, Bitcoin ..." onclick="this.value=''" spellcheck="false" type="text" name="searchText"> <br>
       <input class="submit-btn" type="button" value="Search" onclick="myFunction()">
     </form>
     
@@ -81,8 +81,8 @@
       const searchText = form.elements["searchText"].value;
       const loader = document.getElementsByClassName("loader")[0];
 
-      const positiveWords = ["good", "happy", "exciting", "great", "welcome", "better", "excellent", "awesome", "amazing", "fantstic", "buy", "gain", "gained", "interesting", "earnings", "double", "doubled", "high", "interest", "earning", "earnings", "thrive", "invest", "ready", "positive", "massive", "new", "green"];
-      const negativeWords = ["bad", "sad", "hardly", "scarcely", "worse", "loss", "lost", "sell", "fell", "barely", "down", "sue", "sues", "crash", "crashes", "falls", "fear", "fears", "low", "tumbling", "dangerous", "risk", "crash", "crashing", "problem", "pressure", "red"];
+      const positiveWords = ["good", "happy", "exciting", "great", "welcome", "better", "excellent", "awesome", "amazing", "fantstic", "buy", "gain", "gained", "interesting", "earnings", "double", "doubled", "high", "interest", "earning", "earnings", "thrive", "invest", "ready", "positive", "massive", "new", "green", "increased"];
+      const negativeWords = ["bad", "sad", "hardly", "scarcely", "worse", "loss", "lost", "sell", "fell", "barely", "down", "sue", "sues", "crash", "crashes", "falls", "fear", "fears", "low", "tumbling", "dangerous", "risk", "crash", "crashing", "problem", "pressure", "red", "decreased"];
 
       let response = {}
 
@@ -96,14 +96,22 @@
         loader.style.display = "none";
 
         let div = document.getElementsByClassName("all-news-div")[0];
-        let titles, contents, dates;
+        let titles, contents, dates, skipped = 0;
 
         for (let i = 0; i < data.results.length; i++) {
 
+          if (i > 0) {
+            if (data.results[i].title == data.results[i-1].title) {
+              console.log("skipped");
+              skipped++;
+              continue;
+            }
+          }
+
           div.innerHTML += "<div class='article'><h3 class='article-title'></h3><h4 class='article-content'></h4><h5 class='article-date'></h5></div>"
-          titles = document.querySelectorAll(".article-title")[i];
-          contents = document.querySelectorAll(".article-content")[i];
-          dates = document.querySelectorAll(".article-date")[i];
+          titles = document.querySelectorAll(".article-title")[i-skipped];
+          contents = document.querySelectorAll(".article-content")[i-skipped];
+          dates = document.querySelectorAll(".article-date")[i-skipped];
 
           titles.innerHTML = data.results[i].title;
           if (data.results.content != null) {
