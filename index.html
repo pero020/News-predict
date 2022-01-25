@@ -40,6 +40,8 @@
 
   <div class="all-news-div">
 
+    <div class="loader">Loading...</div>
+
     <!-- <div class="article">
       <h3 class="article-title"></h3>
       <h4 class="article-content"></h4>
@@ -60,10 +62,10 @@
 
       button = document.getElementsByClassName("sell-h2")[0];
       button.style.color = "black";
-      button.style.opacity = "25%";
+      button.style.opacity = "50%";
       button = document.getElementsByClassName("buy-h2")[0];
       button.style.color = "black";
-      button.style.opacity = "25%";
+      button.style.opacity = "50%";
 
       let articles = document.querySelectorAll(".article")
       articles.forEach(article => {
@@ -77,19 +79,21 @@
       
       const form = document.getElementById("input-form");
       const searchText = form.elements["searchText"].value;
+      const loader = document.getElementsByClassName("loader")[0];
 
       const positiveWords = ["good", "happy", "exciting", "great", "welcome", "better", "excellent", "awesome", "amazing", "fantstic", "buy", "gain", "gained", "interesting", "earnings", "double", "doubled", "high", "interest", "earning", "earnings", "thrive", "invest", "ready", "positive", "massive", "new", "green"];
       const negativeWords = ["bad", "sad", "hardly", "scarcely", "worse", "loss", "lost", "sell", "fell", "barely", "down", "sue", "sues", "crash", "crashes", "falls", "fear", "fears", "low", "tumbling", "dangerous", "risk", "crash", "crashing", "problem", "pressure", "red"];
 
       let response = {}
 
+      resetPage();
+      loader.style.display = "block";
       await fetch("/getApi/" + searchText, {method: "POST"})
       .then(response => response.json())
       .then(data => {
         console.log("Success:");
         console.log(data);
-
-        resetPage();
+        loader.style.display = "none";
 
         let div = document.getElementsByClassName("all-news-div")[0];
         let titles, contents, dates;
@@ -153,7 +157,9 @@
 
       })
       .catch(err => {
-      console.log(err);
+        console.log(err);
+        let div = document.getElementsByClassName("all-news-div")[0];
+        div.innerHTML = "Error, please try again or try later";
       });
 
       
