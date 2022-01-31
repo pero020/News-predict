@@ -88,9 +88,11 @@
 
       resetPage();
       loader.style.display = "block";
-      await fetch("/getApi/" + searchText, {method: "POST"})
-      .then(response => response.json())
-      .then(data => {
+
+      try {
+        let response = await fetch("/getApi/" + searchText, {method: "POST"});
+        let data = await response.json();
+
         console.log("Success:");
         console.log(data);
         loader.style.display = "none";
@@ -108,69 +110,67 @@
             }
           }
 
-          div.innerHTML += "<div class='article'><h3 class='article-title'></h3><h4 class='article-content'></h4><h5 class='article-date'></h5></div>"
-          titles = document.querySelectorAll(".article-title")[i-skipped];
-          contents = document.querySelectorAll(".article-content")[i-skipped];
-          dates = document.querySelectorAll(".article-date")[i-skipped];
+            div.innerHTML += "<div class='article'><h3 class='article-title'></h3><h4 class='article-content'></h4><h5 class='article-date'></h5></div>"
+            titles = document.querySelectorAll(".article-title")[i-skipped];
+            contents = document.querySelectorAll(".article-content")[i-skipped];
+            dates = document.querySelectorAll(".article-date")[i-skipped];
 
-          titles.innerHTML = data.results[i].title;
-          if (data.results.content != null) {
-            contents.innerHTML = data.results[i].content;
-          } else if (data.results[i].description != null) {
-            contents.innerHTML = data.results[i].description;
-          } else {
-            console.log("No desc or content!");
-          }
-          
-          dates.innerHTML = data.results[i].pubDate;
-        }
-
-        let average = 0;
-        data.results.forEach(article => {
-
-          let wordsDescription, wordsTitle, words;
-          wordsTitle = article.title.split(" ");
-          if (article.content != null) {
-            wordsDescription = article.content.split(" ");
-          } else if (article.description != null) {
-            wordsDescription = article.description.split(" ");
-          } else {
-            wordsDescription = [];
-          }
-          words = wordsTitle.concat(wordsDescription);
-
-          words.forEach(word => {
-            if (positiveWords.includes(word.toLowerCase())) {
-              average += 1;
-              console.log(average);
+            titles.innerHTML = data.results[i].title;
+            if (data.results.content != null) {
+              contents.innerHTML = data.results[i].content;
+            } else if (data.results[i].description != null) {
+              contents.innerHTML = data.results[i].description;
+            } else {
+              console.log("No desc or content!");
             }
-            if (negativeWords.includes(word.toLowerCase())) {
-              average -= 1;
-              console.log(average);
+            
+            dates.innerHTML = data.results[i].pubDate;
+          }
+
+          let average = 0;
+          data.results.forEach(article => {
+
+            let wordsDescription, wordsTitle, words;
+            wordsTitle = article.title.split(" ");
+            if (article.content != null) {
+              wordsDescription = article.content.split(" ");
+            } else if (article.description != null) {
+              wordsDescription = article.description.split(" ");
+            } else {
+              wordsDescription = [];
             }
+            words = wordsTitle.concat(wordsDescription);
+
+            words.forEach(word => {
+              if (positiveWords.includes(word.toLowerCase())) {
+                average += 1;
+                console.log(average);
+              }
+              if (negativeWords.includes(word.toLowerCase())) {
+                average -= 1;
+                console.log(average);
+              }
+            });
+            
           });
-          
-        });
-        console.log(average);
-        let button
-        if (average < 0) {
-          button = document.getElementsByClassName("sell-h2")[0];
-          button.style.color = "red";
-          button.style.opacity = "100%";
-        } else if (average > 0) {
-          button = document.getElementsByClassName("buy-h2")[0];
-          button.style.color = "green";
-          button.style.opacity = "100%";
-        }
+          console.log(average);
+          let button
+          if (average < 0) {
+            button = document.getElementsByClassName("sell-h2")[0];
+            button.style.color = "red";
+            button.style.opacity = "100%";
+          } else if (average > 0) {
+            button = document.getElementsByClassName("buy-h2")[0];
+            button.style.color = "green";
+            button.style.opacity = "100%";
+          }
+      }  catch (err) {
 
-      })
-      .catch(err => {
         console.log(err);
         let div = document.getElementsByClassName("all-news-div")[0];
         div.innerHTML = "Error, please try again or try later";
-      });
 
-      
+      }    
 
     }
 

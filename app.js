@@ -14,14 +14,14 @@ app.get("/", function(req, res) {
 });
 
 app.post("/getApi/:searchText", async function(req, res) {
-  await fetch("https://newsdata.io/api/1/news?apikey=" + process.env.apiKey + "&language=en&category=business,world,politics&qInTitle=" + req.params.searchText)
-    .then(response => response.json())
-    .then(data => {
-      res.json(data);
-    })
-    .catch(err => {
-      console.log(err);
-    })
+
+  try {
+    let response = await fetch("https://newsdata.io/api/1/news?apikey=" + procces.env.apiKey + "&language=en&category=business,world,politics&qInTitle=" + req.params.searchText)
+    let data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.log(err);
+  }
 
 });
 
