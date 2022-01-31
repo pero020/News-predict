@@ -1,6 +1,7 @@
 # News-predict
 
 link : https://news-predict.herokuapp.com/
+** Please wait for a couple of seconds beacause Heroku free servers take 5 - 10 seconds to boot up after 30 minutes of inactivity.
 
 <hr>
 
