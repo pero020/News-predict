@@ -16,7 +16,7 @@ app.get("/", function(req, res) {
 app.post("/getApi/:searchText", async function(req, res) {
 
   try {
-    let response = await fetch("https://newsdata.io/api/1/news?apikey=" + procces.env.apiKey + "&language=en&category=business,world,politics&qInTitle=" + req.params.searchText)
+    let response = await fetch("https://newsdata.io/api/1/news?apikey=" + proccess.env.apiKey + "&language=en&category=business,world,politics&qInTitle=" + req.params.searchText)
     let data = await response.json();
     res.json(data);
   } catch (err) {
